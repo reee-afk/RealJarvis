@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JARVIS</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<canvas id="graph-canvas"></canvas>
+
+<div id="topbar" class="panel">
+  <div id="brand">JARVIS</div>
+  <div id="badges">
+    <span id="badge-demo" class="badge">DEMO</span>
+    <span id="badge-model" class="badge">MODEL</span>
+    <span id="badge-voice" class="badge">VOICE</span>
+  </div>
+</div>
+
+<div id="error-banner"></div>
+
+<div id="inspector" class="panel">
+  <div class="panel-header">Inspector</div>
+  <div id="inspector-body">
+    <p class="empty">Click a node to inspect it. Shift-click a second to trace the path between them.</p>
+  </div>
+  <div id="hubs-list"></div>
+</div>
+
+<div id="rightpanel" class="panel">
+  <div class="panel-header">Filters</div>
+  <div id="filters"></div>
+  <div id="reactor-wrap">
+    <canvas id="reactor-canvas" width="120" height="120"></canvas>
+    <div id="reactor-state">idle</div>
+    <div id="bars">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </div>
+    <div id="caption"></div>
+  </div>
+</div>
+
+<div id="chatlog" class="panel"></div>
+
+<div id="askbar" class="panel">
+  <div id="example-prompt"></div>
+  <div id="ask-row">
+    <button id="btn-memory" class="icon-btn" title="Remember a fact">MEM</button>
+    <button id="btn-brief" class="icon-btn" title="Brief me">BRF</button>
+    <button id="btn-plan" class="icon-btn" title="Plan my day">PLN</button>
+    <input id="ask-input" type="text" placeholder="Ask JARVIS…" autocomplete="off" />
+    <button id="btn-mic" class="icon-btn" title="Push to talk (Space to barge in)">●</button>
+    <button id="btn-mute" class="icon-btn" title="Mute replies">MUTE</button>
+  </div>
+</div>
+
+<script src="/graph.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
