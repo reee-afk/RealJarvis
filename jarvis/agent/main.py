@@ -18,6 +18,7 @@ from agent import data, memory, router, vault, voice  # noqa: E402
 BASE_DIR = Path(__file__).resolve().parent.parent
 UI_DIR = BASE_DIR / "ui"
 PORT = int(os.environ.get("JARVIS_PORT", "8420"))
+HOST = os.environ.get("JARVIS_HOST", "127.0.0.1")  # loopback only — never exposed, no firewall prompt
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -162,9 +163,17 @@ def main():
     print("  top hubs:", ", ".join(n["title"] for n in vault.top_hubs(10)))
     print(f"  model: {'connected' if router.is_llm_configured() else 'NOT CONFIGURED — heuristic routing'}")
     print(f"  voice: {'connected' if voice.is_configured() else 'NOT CONFIGURED'}")
-    print(f"\nServing on http://localhost:{PORT}\n")
+    print(f"\nServing on http://{HOST}:{PORT}\n")
 
-    server = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
+    try:
+        server = ThreadingHTTPServer((HOST, PORT), Handler)
+    except OSError as exc:
+        # Already running (a prior instance, or the always-on task) — this is
+        # not a failure worth restarting over, so exit clean rather than let
+        # a service manager's restart-on-failure loop spin forever.
+        print(f"Port {PORT} is already in use — JARVIS is probably already running. ({exc})")
+        sys.exit(0)
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:

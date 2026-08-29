@@ -21,6 +21,33 @@ Open `http://localhost:8420`.
 There's nothing to `pip install` — everything server-side is stdlib. The
 only external service is ElevenLabs, called directly over HTTPS.
 
+### Always-on (Windows)
+
+To have JARVIS start itself at logon and keep running in the background —
+no terminal window, restarts itself if it ever dies:
+
+```powershell
+cd jarvis
+copy .env.example .env      # if you haven't already — fill in ELEVENLABS_API_KEY first
+powershell -ExecutionPolicy Bypass -File .\scripts\install-windows-task.ps1
+```
+
+This registers a Windows Scheduled Task (`JARVIS`) — no third-party service
+manager, no admin rights needed. It runs `scripts\run_hidden.pyw` with
+`pythonw.exe` (no console window), starts at every logon, and restarts
+itself automatically (up to once a minute) if it ever crashes.
+
+- **Logs:** `jarvis\jarvis.log`
+- **Check it's running:** open `http://localhost:8420`, or run
+  `Get-ScheduledTaskInfo -TaskName JARVIS` in PowerShell
+- **Stop it (until next logon):** `Stop-ScheduledTask -TaskName JARVIS`
+- **Remove it entirely:**
+  `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall-windows-task.ps1`
+
+It binds to `127.0.0.1` only (see `JARVIS_HOST` in `.env.example`) — never
+reachable from outside your machine, and Windows Firewall won't prompt you
+about it.
+
 ### The demo switch
 
 `JARVIS_DEMO` in `.env` controls what `agent/data.py` — the one file that
